@@ -1,828 +1,1363 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curso Completo de RAP (SAP Fiori)</title>
-    <style>
-        :root {
-            --primary: #0070f3;
-            --secondary: #6c757d;
-            --success: #28a745;
-            --dark: #343a40;
-            --light: #f8f9fa;
-            --white: #ffffff;
-            --gray-100: #f8f9fa;
-            --gray-200: #e9ecef;
-            --gray-300: #dee2e6;
-            --gray-800: #343a40;
-            --sap-blue: #0070f3;
-            --sap-gold: #f5c24f;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--dark);
-            background-color: var(--gray-100);
-        }
-
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 280px;
-            background-color: var(--gray-800);
-            color: var(--white);
-            padding: 20px 0;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .sidebar-header {
-            padding: 0 20px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-logo {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .sidebar-logo img {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        .sidebar-logo h1 {
-            font-size: 1.2rem;
-            color: var(--sap-gold);
-        }
-
-        .sidebar-menu {
-            padding: 20px;
-        }
-
-        .menu-label {
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-            color: var(--gray-300);
-            margin: 10px 0;
-        }
-
-        .menu-item {
-            list-style: none;
-            margin-bottom: 5px;
-        }
-
-        .menu-link {
-            display: block;
-            padding: 10px;
-            color: var(--gray-300);
-            text-decoration: none;
-            border-radius: 5px;
-            transition: all 0.2s ease;
-        }
-
-        .menu-link:hover, .menu-link.active {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--white);
-        }
-
-        .submenu {
-            list-style: none;
-            padding-left: 20px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-
-        .submenu-item {
-            margin-bottom: 2px;
-        }
-
-        .submenu-link {
-            display: block;
-            padding: 8px 10px;
-            color: var(--gray-300);
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-        }
-
-        .submenu-link:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--white);
-        }
-
-        .menu-item.expanded .submenu {
-            max-height: 1000px;
-        }
-
-        .toggle-btn {
-            background: none;
-            border: none;
-            color: var(--gray-300);
-            cursor: pointer;
-            float: right;
-            padding: 5px;
-        }
-
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .header {
-            background-color: var(--white);
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
-
-        .header h1 {
-            font-size: 2rem;
-            color: var(--dark);
-            margin-bottom: 10px;
-        }
-
-        .breadcrumb {
-            display: flex;
-            list-style: none;
-            margin-bottom: 10px;
-        }
-
-        .breadcrumb-item {
-            display: flex;
-            align-items: center;
-        }
-
-        .breadcrumb-item:not(:last-child)::after {
-            content: '/';
-            margin: 0 10px;
-            color: var(--secondary);
-        }
-
-        .breadcrumb-link {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .breadcrumb-link:hover {
-            text-decoration: underline;
-        }
-
-        .content-section {
-            background-color: var(--white);
-            padding: 30px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--gray-200);
-            color: var(--sap-blue);
-        }
-
-        .section-subtitle {
-            font-size: 1.4rem;
-            margin: 25px 0 15px;
-            color: var(--dark);
-        }
-
-        .section-paragraph {
-            margin-bottom: 15px;
-            line-height: 1.7;
-        }
-
-        .section-list {
-            padding-left: 20px;
-            margin-bottom: 15px;
-        }
-
-        .section-list-item {
-            margin-bottom: 10px;
-        }
-
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .card {
-            background-color: var(--white);
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            background-color: var(--sap-blue);
-            color: var(--white);
-            padding: 20px;
-        }
-
-        .card-title {
-            font-size: 1.2rem;
-            margin-bottom: 5px;
-        }
-
-        .card-subtitle {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        .card-body {
-            padding: 20px;
-        }
-
-        .card-text {
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: var(--primary);
-            color: var(--white);
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .btn:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-secondary {
-            background-color: var(--secondary);
-        }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-
-        .btn-success {
-            background-color: var(--success);
-        }
-
-        .btn-success:hover {
-            background-color: #218838;
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table th, table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--gray-300);
-        }
-
-        table th {
-            background-color: var(--gray-200);
-            font-weight: 600;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-right: 5px;
-        }
-
-        .badge-primary {
-            background-color: #cfe2ff;
-            color: #0d6efd;
-        }
-
-        .badge-success {
-            background-color: #d1e7dd;
-            color: #0f5132;
-        }
-
-        .badge-info {
-            background-color: #cff4fc;
-            color: #055160;
-        }
-
-        .module-content {
-            display: none;
-        }
-
-        .module-content.active {
-            display: block;
-        }
-
-        .footer {
-            background-color: var(--gray-200);
-            text-align: center;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            color: var(--secondary);
-        }
-
-        .progress-container {
-            margin-bottom: 20px;
-        }
-
-        .progress-bar {
-            height: 10px;
-            background-color: var(--gray-300);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .progress {
-            height: 100%;
-            background-color: var(--sap-blue);
-            width: 0;
-            transition: width 0.5s ease;
-        }
-
-        .progress-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 5px;
-            font-size: 0.9rem;
-            color: var(--secondary);
-        }
-
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            max-width: 100%;
-            margin-bottom: 20px;
-            background-color: var(--gray-300);
-            border-radius: 5px;
-        }
-
-        .video-placeholder {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: var(--gray-800);
-        }
-
-        .play-icon {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-
-        .module-nav {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid var(--gray-200);
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 0;
-                padding: 0;
-            }
-
-            .sidebar.active {
-                width: 250px;
-                padding: 20px 0;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            #sidebarCollapse {
-                display: block;
-                position: fixed;
-                top: 20px;
-                left: 20px;
-                z-index: 1100;
-                background-color: var(--sap-blue);
-                color: white;
-                border: none;
-                border-radius: 5px;
-                padding: 10px;
-                cursor: pointer;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Curso Completo de RAP (SAP Fiori)</title>
+  <style>
+    :root {
+      --primary: #0070f3;
+      --secondary: #6c757d;
+      --success: #28a745;
+      --dark: #343a40;
+      --light: #f8f9fa;
+      --white: #ffffff;
+      --gray-100: #f8f9fa;
+      --gray-200: #e9ecef;
+      --gray-300: #dee2e6;
+      --gray-800: #343a40;
+      --sap-blue: #0070f3;
+      --sap-gold: #f5c24f;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--dark);
+      background-color: var(--gray-100);
+    }
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 280px;
+      background-color: var(--gray-800);
+      color: var(--white);
+      padding: 20px 0;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    .sidebar-header {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .sidebar-logo img {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+    .sidebar-logo h1 {
+      font-size: 1.2rem;
+      color: var(--sap-gold);
+    }
+    .sidebar-menu {
+      padding: 20px;
+    }
+    .menu-label {
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      color: var(--gray-300);
+      margin: 10px 0;
+    }
+    .menu-item {
+      list-style: none;
+      margin-bottom: 5px;
+    }
+    .menu-link {
+      display: block;
+      padding: 10px;
+      color: var(--gray-300);
+      text-decoration: none;
+      border-radius: 5px;
+      transition: all 0.2s ease;
+    }
+    .menu-link:hover, .menu-link.active {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: var(--white);
+    }
+    .submenu {
+      list-style: none;
+      padding-left: 20px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .submenu-item {
+      margin-bottom: 2px;
+    }
+    .submenu-link {
+      display: block;
+      padding: 8px 10px;
+      color: var(--gray-300);
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    .submenu-link:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--white);
+    }
+    .menu-item.expanded .submenu {
+      max-height: 1000px;
+    }
+    .toggle-btn {
+      background: none;
+      border: none;
+      color: var(--gray-300);
+      cursor: pointer;
+      float: right;
+      padding: 5px;
+    }
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+    .header {
+      background-color: var(--white);
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      border-radius: 5px;
+    }
+    .header h1 {
+      font-size: 2rem;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .breadcrumb {
+      display: flex;
+      list-style: none;
+      margin-bottom: 10px;
+    }
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+    }
+    .breadcrumb-item:not(:last-child)::after {
+      content: '/';
+      margin: 0 10px;
+      color: var(--secondary);
+    }
+    .breadcrumb-link {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .breadcrumb-link:hover {
+      text-decoration: underline;
+    }
+    .content-section {
+      background-color: var(--white);
+      padding: 30px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--gray-200);
+      color: var(--sap-blue);
+    }
+    .section-subtitle {
+      font-size: 1.4rem;
+      margin: 25px 0 15px;
+      color: var(--dark);
+    }
+    .section-paragraph {
+      margin-bottom: 15px;
+      line-height: 1.7;
+    }
+    .section-list {
+      padding-left: 20px;
+      margin-bottom: 15px;
+    }
+    .section-list-item {
+      margin-bottom: 10px;
+    }
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      max-width: 100%;
+      margin-bottom: 20px;
+      background-color: var(--gray-300);
+      border-radius: 5px;
+    }
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: var(--primary);
+      color: var(--white);
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .btn-secondary {
+      background-color: var(--secondary);
+    }
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+    .btn-success {
+      background-color: var(--success);
+    }
+    .btn-success:hover {
+      background-color: #218838;
+    }
+    .module-content {
+      display: none;
+    }
+    .module-content.active {
+      display: block;
+    }
+    .footer {
+      background-color: var(--gray-200);
+      text-align: center;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      color: var(--secondary);
+    }
+  </style>
 </head>
 <body>
-    <button id="sidebarCollapse" style="display: none;">☰</button>
+  <button id="sidebarCollapse" style="display: none;">☰</button>
 
-    <div class="container">
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                    <div style="width: 40px; height: 40px; background-color: var(--sap-gold); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 10px;">
-                        <span style="color: var(--dark); font-weight: bold;">SAP</span>
-                    </div>
-                    <h1>Curso RAP Fiori</h1>
-                </div>
-                <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress" id="course-progress"></div>
-                    </div>
-                    <div class="progress-stats">
-                        <span>Progresso</span>
-                        <span id="progress-percentage">0%</span>
-                    </div>
-                </div>
-            </div>
+  <div class="container">
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <div style="width: 40px; height: 40px; background-color: var(--sap-gold); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 10px;">
+            <span style="color: var(--dark); font-weight: bold;">SAP</span>
+          </div>
+          <h1>Curso RAP Fiori</h1>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress" id="course-progress"></div>
+          </div>
+          <div class="progress-stats">
+            <span>Progresso</span>
+            <span id="progress-percentage">0%</span>
+          </div>
+        </div>
+      </div>
 
-            <div class="sidebar-menu">
-                <ul>
-                    <li class="menu-item">
-                        <a href="#inicio" class="menu-link active" data-target="inicio">Início</a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="#sobre" class="menu-link" data-target="sobre">Sobre o Curso</a>
-                    </li>
-                    
-                    <div class="menu-label">Módulos</div>
-                    
-                    <li class="menu-item">
-                        <a href="#modulo1" class="menu-link" data-target="modulo1">
-                            Módulo 1: Fundamentos do SAP Fiori
-                            <button class="toggle-btn">+</button>
-                        </a>
-                        <ul class="submenu">
-                            <li class="submenu-item">
-                                <a href="#modulo1-1" class="submenu-link" data-target="modulo1-1">1.1 Introdução ao SAP Fiori</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo1-2" class="submenu-link" data-target="modulo1-2">1.2 Arquitetura SAP Fiori</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo1-3" class="submenu-link" data-target="modulo1-3">1.3 Tecnologias Web no Contexto SAP</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                    <li class="menu-item">
-                        <a href="#modulo2" class="menu-link" data-target="modulo2">
-                            Módulo 2: Fundamentos do RAP
-                            <button class="toggle-btn">+</button>
-                        </a>
-                        <ul class="submenu">
-                            <li class="submenu-item">
-                                <a href="#modulo2-1" class="submenu-link" data-target="modulo2-1">2.1 Introdução ao Modelo RAP</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo2-2" class="submenu-link" data-target="modulo2-2">2.2 Business Object Processing Framework</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo2-3" class="submenu-link" data-target="modulo2-3">2.3 Managed vs. Unmanaged RAP</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo2-4" class="submenu-link" data-target="modulo2-4">2.4 Entidades de Dados no RAP</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                    <li class="menu-item">
-                        <a href="#modulo3" class="menu-link" data-target="modulo3">
-                            Módulo 3: Desenvolvimento de Aplicações
-                            <button class="toggle-btn">+</button>
-                        </a>
-                        <ul class="submenu">
-                            <li class="submenu-item">
-                                <a href="#modulo3-1" class="submenu-link" data-target="modulo3-1">3.1 Configuração do Ambiente</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo3-2" class="submenu-link" data-target="modulo3-2">3.2 Primeiro Projeto RAP</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo3-3" class="submenu-link" data-target="modulo3-3">3.3 Behavior Definition</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo3-4" class="submenu-link" data-target="modulo3-4">3.4 Validações e Ações</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo3-5" class="submenu-link" data-target="modulo3-5">3.5 Determinações e Funções</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                    <li class="menu-item">
-                        <a href="#modulo4" class="menu-link" data-target="modulo4">
-                            Módulo 4: Integrando RAP com Fiori
-                            <button class="toggle-btn">+</button>
-                        </a>
-                        <ul class="submenu">
-                            <li class="submenu-item">
-                                <a href="#modulo4-1" class="submenu-link" data-target="modulo4-1">4.1 OData e REST</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo4-2" class="submenu-link" data-target="modulo4-2">4.2 Gerando Serviços</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo4-3" class="submenu-link" data-target="modulo4-3">4.3 Interface Fiori</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo4-4" class="submenu-link" data-target="modulo4-4">4.4 Aplicações Fiori Freestyle</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                    <li class="menu-item">
-                        <a href="#modulo5" class="menu-link" data-target="modulo5">
-                            Módulo 5: Tópicos Avançados
-                            <button class="toggle-btn">+</button>
-                        </a>
-                        <ul class="submenu">
-                            <li class="submenu-item">
-                                <a href="#modulo5-1" class="submenu-link" data-target="modulo5-1">5.1 Autorização e Segurança</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo5-2" class="submenu-link" data-target="modulo5-2">5.2 Draft Handling</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo5-3" class="submenu-link" data-target="modulo5-3">5.3 Otimização de Performance</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo5-4" class="submenu-link" data-target="modulo5-4">5.4 Integração com Outros Sistemas</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                    <li class="menu-item">
-                        <a href="#modulo6" class="menu-link" data-target="modulo6">
-                            Módulo 6: Projeto Final
-                            <button class="toggle-btn">+</button>
-                        </a>
-                        <ul class="submenu">
-                            <li class="submenu-item">
-                                <a href="#modulo6-1" class="submenu-link" data-target="modulo6-1">6.1 Metodologia de Projeto</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo6-2" class="submenu-link" data-target="modulo6-2">6.2 Desenvolvimento do Projeto</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo6-3" class="submenu-link" data-target="modulo6-3">6.3 Testes e Qualidade</a>
-                            </li>
-                            <li class="submenu-item">
-                                <a href="#modulo6-4" class="submenu-link" data-target="modulo6-4">6.4 Apresentação e Avaliação</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                    <div class="menu-label">Recursos</div>
-                    
-                    <li class="menu-item">
-                        <a href="#biblioteca" class="menu-link" data-target="biblioteca">Biblioteca de Materiais</a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="#forum" class="menu-link" data-target="forum">Fórum de Discussão</a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="#certificacao" class="menu-link" data-target="certificacao">Certificação</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+      <div class="sidebar-menu">
+        <ul>
+          <li class="menu-item">
+            <a href="#inicio" class="menu-link active" data-target="inicio">Início</a>
+          </li>
+          <li class="menu-item">
+            <a href="#sobre" class="menu-link" data-target="sobre">Sobre o Curso</a>
+          </li>
+          
+          <div class="menu-label">Módulos</div>
+          
+          <li class="menu-item">
+            <a href="#modulo1" class="menu-link" data-target="modulo1">
+              Módulo 1: Fundamentos do SAP Fiori
+              <button class="toggle-btn">+</button>
+            </a>
+            <ul class="submenu">
+              <li class="submenu-item">
+                <a href="#modulo1-1" class="submenu-link" data-target="modulo1-1">1.1 Introdução ao SAP Fiori</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo1-2" class="submenu-link" data-target="modulo1-2">1.2 Arquitetura SAP Fiori</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo1-3" class="submenu-link" data-target="modulo1-3">1.3 Tecnologias Web no Contexto SAP</a>
+              </li>
+            </ul>
+          </li>
+          
+          <li class="menu-item">
+            <a href="#modulo2" class="menu-link" data-target="modulo2">
+              Módulo 2: Fundamentos do RAP
+              <button class="toggle-btn">+</button>
+            </a>
+            <ul class="submenu">
+              <li class="submenu-item">
+                <a href="#modulo2-1" class="submenu-link" data-target="modulo2-1">2.1 Introdução ao Modelo RAP</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo2-2" class="submenu-link" data-target="modulo2-2">2.2 Business Object Processing Framework</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo2-3" class="submenu-link" data-target="modulo2-3">2.3 Managed vs. Unmanaged RAP</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo2-4" class="submenu-link" data-target="modulo2-4">2.4 Entidades de Dados no RAP</a>
+              </li>
+            </ul>
+          </li>
+          
+          <li class="menu-item">
+            <a href="#modulo3" class="menu-link" data-target="modulo3">
+              Módulo 3: Desenvolvimento de Aplicações
+              <button class="toggle-btn">+</button>
+            </a>
+            <ul class="submenu">
+              <li class="submenu-item">
+                <a href="#modulo3-1" class="submenu-link" data-target="modulo3-1">3.1 Configuração do Ambiente</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo3-2" class="submenu-link" data-target="modulo3-2">3.2 Primeiro Projeto RAP</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo3-3" class="submenu-link" data-target="modulo3-3">3.3 Behavior Definition</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo3-4" class="submenu-link" data-target="modulo3-4">3.4 Validações e Ações</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo3-5" class="submenu-link" data-target="modulo3-5">3.5 Determinações e Funções</a>
+              </li>
+            </ul>
+          </li>
+          
+          <li class="menu-item">
+            <a href="#modulo4" class="menu-link" data-target="modulo4">
+              Módulo 4: Integrando RAP com Fiori
+              <button class="toggle-btn">+</button>
+            </a>
+            <ul class="submenu">
+              <li class="submenu-item">
+                <a href="#modulo4-1" class="submenu-link" data-target="modulo4-1">4.1 OData e REST</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo4-2" class="submenu-link" data-target="modulo4-2">4.2 Gerando Serviços</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo4-3" class="submenu-link" data-target="modulo4-3">4.3 Interface Fiori</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo4-4" class="submenu-link" data-target="modulo4-4">4.4 Aplicações Fiori Freestyle</a>
+              </li>
+            </ul>
+          </li>
+          
+          <li class="menu-item">
+            <a href="#modulo5" class="menu-link" data-target="modulo5">
+              Módulo 5: Tópicos Avançados
+              <button class="toggle-btn">+</button>
+            </a>
+            <ul class="submenu">
+              <li class="submenu-item">
+                <a href="#modulo5-1" class="submenu-link" data-target="modulo5-1">5.1 Autorização e Segurança</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo5-2" class="submenu-link" data-target="modulo5-2">5.2 Draft Handling</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo5-3" class="submenu-link" data-target="modulo5-3">5.3 Otimização de Performance</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo5-4" class="submenu-link" data-target="modulo5-4">5.4 Integração com Outros Sistemas</a>
+              </li>
+            </ul>
+          </li>
+          
+          <li class="menu-item">
+            <a href="#modulo6" class="menu-link" data-target="modulo6">
+              Módulo 6: Projeto Final
+              <button class="toggle-btn">+</button>
+            </a>
+            <ul class="submenu">
+              <li class="submenu-item">
+                <a href="#modulo6-1" class="submenu-link" data-target="modulo6-1">6.1 Metodologia de Projeto</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo6-2" class="submenu-link" data-target="modulo6-2">6.2 Desenvolvimento do Projeto</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo6-3" class="submenu-link" data-target="modulo6-3">6.3 Testes e Qualidade</a>
+              </li>
+              <li class="submenu-item">
+                <a href="#modulo6-4" class="submenu-link" data-target="modulo6-4">6.4 Apresentação e Avaliação</a>
+              </li>
+            </ul>
+          </li>
+          
+          <div class="menu-label">Recursos</div>
+          
+          <li class="menu-item">
+            <a href="#biblioteca" class="menu-link" data-target="biblioteca">Biblioteca de Materiais</a>
+          </li>
+          <li class="menu-item">
+            <a href="#forum" class="menu-link" data-target="forum">Fórum de Discussão</a>
+          </li>
+          <li class="menu-item">
+            <a href="#certificacao" class="menu-link" data-target="certificacao">Certificação</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
 
-        <main class="main-content">
-            <!-- INÍCIO -->
-            <section id="inicio" class="module-content active">
-                <div class="header">
-                    <h1>Curso Completo de RAP (SAP Fiori)</h1>
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#inicio" class="breadcrumb-link">Home</a></li>
-                        <li class="breadcrumb-item">Início</li>
-                    </ul>
-                </div>
+    <main class="main-content">
+      <!-- INÍCIO -->
+      <section id="inicio" class="module-content active">
+        <div class="header">
+          <h1>Curso Completo de RAP (SAP Fiori)</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#inicio" class="breadcrumb-link">Home</a></li>
+            <li class="breadcrumb-item">Início</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Bem-vindo ao Curso Completo de RAP e SAP Fiori</h2>
+          <p class="section-paragraph">
+            Este curso foi elaborado para desenvolvedores e consultores SAP que desejam dominar o RAP e o SAP Fiori, criando aplicações modernas e intuitivas. Navegue pelos módulos e descubra conteúdos teóricos e práticos que vão impulsionar sua carreira.
+          </p>
+          <h3 class="section-subtitle">Destaques do Curso</h3>
+          <ul class="section-list">
+            <li class="section-list-item"><strong>Conteúdo Completo:</strong> Dos fundamentos até tópicos avançados.</li>
+            <li class="section-list-item"><strong>Vídeos e Demonstrações:</strong> Aulas práticas e explicativas.</li>
+            <li class="section-list-item"><strong>Exercícios e Dicas:</strong> Prática garantida e orientações valiosas.</li>
+          </ul>
+          <a href="#modulo1" class="btn btn-success" data-navigate="modulo1">Começar o Curso</a>
+        </div>
+      </section>
 
-                <div class="content-section">
-                    <h2 class="section-title">Bem-vindo ao Curso Completo de RAP e SAP Fiori</h2>
-                    <p class="section-paragraph">
-                        Este curso abrangente foi projetado para desenvolvedores e consultores SAP que desejam dominar o RESTful Application Programming (RAP) e o SAP Fiori para criar aplicações modernas, responsivas e intuitivas dentro do ecossistema SAP.
-                    </p>
-                    <p class="section-paragraph">
-                        Partindo dos conceitos fundamentais até técnicas avançadas de implementação, este programa educacional oferece uma jornada completa de aprendizado com conteúdo prático e teórico.
-                    </p>
+      <!-- SOBRE O CURSO -->
+      <section id="sobre" class="module-content">
+        <div class="header">
+          <h1>Sobre o Curso</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#inicio" class="breadcrumb-link">Home</a></li>
+            <li class="breadcrumb-item">Sobre o Curso</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Visão Geral do Curso</h2>
+          <p class="section-paragraph">
+            Este curso abrange desde os fundamentos do SAP Fiori e RAP até a implementação de aplicações integradas. Com uma abordagem prática, você aprenderá a desenvolver projetos reais e obterá certificação ao final.
+          </p>
+          <h3 class="section-subtitle">Público-Alvo e Pré-requisitos</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Desenvolvedores ABAP e consultores SAP</li>
+            <li class="section-list-item">Conhecimento básico de programação e conceitos de desenvolvimento web</li>
+            <li class="section-list-item">Experiência com SAP S/4HANA é recomendada</li>
+          </ul>
+        </div>
+      </section>
 
-                    <h3 class="section-subtitle">Destaques do Curso</h3>
-                    <div class="card-grid">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">6 Módulos Completos</h3>
-                                <div class="card-subtitle">180 horas de conteúdo</div>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text">Desde os fundamentos até tópicos avançados, cobrindo todos os aspectos do desenvolvimento RAP e Fiori.</p>
-                                <a href="#sobre" class="btn" data-navigate="sobre">Ver Módulos</a>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Projetos Práticos</h3>
-                                <div class="card-subtitle">Casos reais de implementação</div>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text">Aplique os conhecimentos em projetos práticos baseados em cenários reais de negócio.</p>
-                                <a href="#modulo6" class="btn" data-navigate="modulo6">Ver Projetos</a>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Certificação</h3>
-                                <div class="card-subtitle">Reconhecida pelo mercado</div>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text">Ao completar o curso, receba um certificado de Especialista em Desenvolvimento de Aplicações RAP e SAP Fiori.</p>
-                                <a href="#certificacao" class="btn" data-navigate="certificacao">Mais Informações</a>
-                            </div>
-                        </div>
-                    </div>
+      <!-- MÓDULO 1: FUNDAMENTOS DO SAP FIORI -->
+      <section id="modulo1" class="module-content">
+        <div class="header">
+          <h1>Módulo 1: Fundamentos do SAP Fiori</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#inicio" class="breadcrumb-link">Home</a></li>
+            <li class="breadcrumb-item">Módulo 1</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Visão Geral do Módulo 1</h2>
+          <p class="section-paragraph">
+            Neste módulo, você conhecerá os princípios e a importância do SAP Fiori, suas características e como ele revoluciona a experiência do usuário no ambiente SAP.
+          </p>
+          <ul class="section-list">
+            <li class="section-list-item">Histórico e evolução do SAP Fiori</li>
+            <li class="section-list-item">Principais conceitos e benefícios</li>
+            <li class="section-list-item">Visão geral da interface e usabilidade</li>
+          </ul>
+        </div>
+      </section>
 
-                    <h3 class="section-subtitle">Comece sua jornada</h3>
-                    <p class="section-paragraph">Pronto para transformar sua carreira como desenvolvedor SAP? Comece agora mesmo explorando o conteúdo do curso.</p>
-                    <a href="#modulo1" class="btn btn-success" data-navigate="modulo1">Começar o Curso</a>
-                </div>
-            </section>
+      <!-- 1.1 Introdução ao SAP Fiori -->
+      <section id="modulo1-1" class="module-content">
+        <div class="header">
+          <h1>1.1 Introdução ao SAP Fiori</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo1" class="breadcrumb-link">Módulo 1</a></li>
+            <li class="breadcrumb-item">1.1 Introdução ao SAP Fiori</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">O que é o SAP Fiori?</h2>
+          <p class="section-paragraph">
+            O SAP Fiori é a nova experiência de usuário da SAP, focada na simplicidade, responsividade e design intuitivo. Ele foi desenvolvido para melhorar a interação dos usuários com os sistemas SAP, tornando as tarefas mais simples e eficientes.
+          </p>
+          <div class="video-container">
+            <!-- Substitua o 'VIDEO_ID' pelo ID do vídeo desejado -->
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios Práticos</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Pesquise exemplos reais de interfaces SAP Fiori.</li>
+            <li class="section-list-item">Crie um esboço de uma tela utilizando os princípios do Fiori.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Explore a documentação oficial da SAP para entender melhor os padrões de design.</li>
+            <li class="section-list-item">Assista a tutoriais e participe de fóruns para tirar dúvidas.</li>
+          </ul>
+        </div>
+      </section>
 
-            <!-- SOBRE O CURSO -->
-            <section id="sobre" class="module-content">
-                <div class="header">
-                    <h1>Sobre o Curso</h1>
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#inicio" class="breadcrumb-link">Home</a></li>
-                        <li class="breadcrumb-item">Sobre o Curso</li>
-                    </ul>
-                </div>
+      <!-- 1.2 Arquitetura SAP Fiori -->
+      <section id="modulo1-2" class="module-content">
+        <div class="header">
+          <h1>1.2 Arquitetura SAP Fiori</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo1" class="breadcrumb-link">Módulo 1</a></li>
+            <li class="breadcrumb-item">1.2 Arquitetura SAP Fiori</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Componentes da Arquitetura</h2>
+          <p class="section-paragraph">
+            Conheça os principais componentes que formam a arquitetura do SAP Fiori, desde o front-end até a integração com o backend do SAP.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Desenhe um diagrama da arquitetura do SAP Fiori.</li>
+            <li class="section-list-item">Identifique os pontos de integração com outros sistemas SAP.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Revise as atualizações recentes na arquitetura para acompanhar as inovações.</li>
+          </ul>
+        </div>
+      </section>
 
-                <div class="content-section">
-                    <h2 class="section-title">Visão Geral do Curso</h2>
-                    <p class="section-paragraph">
-                        Este curso abrangente foi projetado para desenvolvedores e consultores SAP que desejam dominar o RESTful Application Programming (RAP) e o SAP Fiori para criar aplicações modernas, responsivas e intuitivas dentro do ecossistema SAP. Partindo dos conceitos fundamentais até técnicas avançadas de implementação, este programa educacional oferece uma jornada completa de aprendizado com conteúdo prático e teórico.
-                    </p>
+      <!-- 1.3 Tecnologias Web no Contexto SAP -->
+      <section id="modulo1-3" class="module-content">
+        <div class="header">
+          <h1>1.3 Tecnologias Web no Contexto SAP</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo1" class="breadcrumb-link">Módulo 1</a></li>
+            <li class="breadcrumb-item">1.3 Tecnologias Web no Contexto SAP</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Ferramentas e Frameworks</h2>
+          <p class="section-paragraph">
+            Aborda as principais tecnologias web utilizadas no desenvolvimento de interfaces SAP, como HTML5, CSS3, JavaScript e frameworks que potencializam a criação de aplicações dinâmicas.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios Práticos</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Crie uma página web simples utilizando HTML5 e CSS3.</li>
+            <li class="section-list-item">Experimente integrar uma pequena aplicação JavaScript com dados simulados.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Utilize ferramentas de desenvolvimento como o Chrome DevTools para debugar suas aplicações.</li>
+          </ul>
+        </div>
+      </section>
 
-                    <h3 class="section-subtitle">Público-Alvo</h3>
-                    <ul class="section-list">
-                        <li class="section-list-item">Desenvolvedores ABAP com conhecimento básico a intermediário</li>
-                        <li class="section-list-item">Consultores SAP que desejam expandir suas habilidades técnicas</li>
-                        <li class="section-list-item">Profissionais de TI buscando especialização no desenvolvimento SAP moderno</li>
-                        <li class="section-list-item">Estudantes avançados em tecnologias SAP</li>
-                    </ul>
+      <!-- MÓDULO 2: FUNDAMENTOS DO RAP -->
+      <section id="modulo2" class="module-content">
+        <div class="header">
+          <h1>Módulo 2: Fundamentos do RAP</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#inicio" class="breadcrumb-link">Home</a></li>
+            <li class="breadcrumb-item">Módulo 2</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Introdução ao RAP</h2>
+          <p class="section-paragraph">
+            Este módulo apresenta o conceito do RESTful Application Programming (RAP) e como ele se integra ao ecossistema SAP para criar aplicações modernas.
+          </p>
+        </div>
+      </section>
 
-                    <h3 class="section-subtitle">Pré-requisitos</h3>
-                    <ul class="section-list">
-                        <li class="section-list-item">Conhecimentos básicos de programação ABAP</li>
-                        <li class="section-list-item">Familiaridade com conceitos de desenvolvimento web</li>
-                        <li class="section-list-item">Noções básicas de SAP S/4HANA</li>
-                        <li class="section-list-item">Acesso a um ambiente SAP para prática (recomendado)</li>
-                    </ul>
+      <!-- 2.1 Introdução ao Modelo RAP -->
+      <section id="modulo2-1" class="module-content">
+        <div class="header">
+          <h1>2.1 Introdução ao Modelo RAP</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo2" class="breadcrumb-link">Módulo 2</a></li>
+            <li class="breadcrumb-item">2.1 Introdução ao Modelo RAP</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Conceitos Básicos</h2>
+          <p class="section-paragraph">
+            Entenda os fundamentos do modelo RAP, como a criação de serviços RESTful e a utilização dos conceitos de recursos e ações.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Crie um exemplo simples de serviço RESTful utilizando o RAP.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Revise a documentação oficial para entender as melhores práticas.</li>
+          </ul>
+        </div>
+      </section>
 
-                    <h3 class="section-subtitle">Estrutura do Curso</h3>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Módulo</th>
-                                    <th>Descrição</th>
-                                    <th>Duração</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Módulo 1</td>
-                                    <td>Fundamentos do SAP Fiori</td>
-                                    <td>2 semanas</td>
-                                </tr>
-                                <tr>
-                                    <td>Módulo 2</td>
-                                    <td>Fundamentos do RESTful Application Programming (RAP)</td>
-                                    <td>3 semanas</td>
-                                </tr>
-                                <tr>
-                                    <td>Módulo 3</td>
-                                    <td>Desenvolvimento de Aplicações com RAP</td>
-                                    <td>4 semanas</td>
-                                </tr>
-                                <tr>
-                                    <td>Módulo 4</td>
-                                    <td>Integrando RAP com Fiori</td>
-                                    <td>3 semanas</td>
-                                </tr>
-                                <tr>
-                                    <td>Módulo 5</td>
-                                    <td>Tópicos Avançados e Otimização</td>
-                                    <td>3 semanas</td>
-                                </tr>
-                                <tr>
-                                    <td>Módulo 6</td>
-                                    <td>Projeto Final e Certificação</td>
-                                    <td>4 semanas</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+      <!-- 2.2 Business Object Processing Framework -->
+      <section id="modulo2-2" class="module-content">
+        <div class="header">
+          <h1>2.2 Business Object Processing Framework</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo2" class="breadcrumb-link">Módulo 2</a></li>
+            <li class="breadcrumb-item">2.2 Business Object Processing Framework</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Framework para Objetos de Negócio</h2>
+          <p class="section-paragraph">
+            Este tópico aborda como o framework auxilia no processamento de objetos de negócio, facilitando a manipulação de dados no RAP.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Desenvolva um pequeno projeto que utilize o framework para gerenciar dados.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Procure entender o fluxo de processamento e como os objetos se comunicam.</li>
+          </ul>
+        </div>
+      </section>
 
-                    <h3 class="section-subtitle">Metodologia de Ensino</h3>
-                    <p class="section-paragraph">Nossa abordagem pedagógica é baseada em três pilares fundamentais:</p>
-                    
-                    <ul class="section-list">
-                        <li class="section-list-item">
-                            <strong>Abordagem Prática:</strong> 70% do conteúdo focado em aplicações práticas
+      <!-- 2.3 Managed vs. Unmanaged RAP -->
+      <section id="modulo2-3" class="module-content">
+        <div class="header">
+          <h1>2.3 Managed vs. Unmanaged RAP</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo2" class="breadcrumb-link">Módulo 2</a></li>
+            <li class="breadcrumb-item">2.3 Managed vs. Unmanaged RAP</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Comparativo e Escolhas</h2>
+          <p class="section-paragraph">
+            Conheça as diferenças entre os modelos Managed e Unmanaged no desenvolvimento RAP e saiba quando utilizar cada abordagem.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Liste as vantagens e desvantagens de cada modelo em um quadro comparativo.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Considere cenários reais para entender qual modelo se adapta melhor a cada situação.</li>
+          </ul>
+        </div>
+      </section>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    // Lógica para os botões de toggle dos submenus
-    const toggleBtns = document.querySelectorAll('.toggle-btn');
-    toggleBtns.forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const menuItem = btn.closest('.menu-item');
-        if (menuItem.classList.contains('expanded')) {
-          menuItem.classList.remove('expanded');
-          btn.textContent = '+';
-        } else {
-          menuItem.classList.add('expanded');
-          btn.textContent = '-';
-        }
+      <!-- 2.4 Entidades de Dados no RAP -->
+      <section id="modulo2-4" class="module-content">
+        <div class="header">
+          <h1>2.4 Entidades de Dados no RAP</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo2" class="breadcrumb-link">Módulo 2</a></li>
+            <li class="breadcrumb-item">2.4 Entidades de Dados no RAP</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Modelagem de Dados</h2>
+          <p class="section-paragraph">
+            Saiba como definir e modelar entidades de dados no RAP, essenciais para a criação de serviços robustos e eficientes.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Crie um diagrama de entidades para um sistema de gerenciamento de pedidos.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Utilize ferramentas de modelagem de dados para facilitar a visualização.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- MÓDULO 3: DESENVOLVIMENTO DE APLICAÇÕES -->
+      <section id="modulo3" class="module-content">
+        <div class="header">
+          <h1>Módulo 3: Desenvolvimento de Aplicações</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#inicio" class="breadcrumb-link">Home</a></li>
+            <li class="breadcrumb-item">Módulo 3</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Da Configuração à Implementação</h2>
+          <p class="section-paragraph">
+            Este módulo mostra, na prática, como configurar o ambiente, iniciar um projeto RAP e implementar funcionalidades com behavior definitions, validações, e muito mais.
+          </p>
+        </div>
+      </section>
+
+      <!-- 3.1 Configuração do Ambiente -->
+      <section id="modulo3-1" class="module-content">
+        <div class="header">
+          <h1>3.1 Configuração do Ambiente</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo3" class="breadcrumb-link">Módulo 3</a></li>
+            <li class="breadcrumb-item">3.1 Configuração do Ambiente</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Preparando seu Ambiente de Desenvolvimento</h2>
+          <p class="section-paragraph">
+            Aprenda a configurar seu ambiente com as ferramentas necessárias para desenvolver aplicações RAP integradas ao SAP Fiori.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Instale e configure o SAP Web IDE ou outra ferramenta compatível.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Verifique os requisitos de sistema antes de iniciar a configuração.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 3.2 Primeiro Projeto RAP -->
+      <section id="modulo3-2" class="module-content">
+        <div class="header">
+          <h1>3.2 Primeiro Projeto RAP</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo3" class="breadcrumb-link">Módulo 3</a></li>
+            <li class="breadcrumb-item">3.2 Primeiro Projeto RAP</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Mãos à Obra: Criando seu Projeto</h2>
+          <p class="section-paragraph">
+            Nesta aula prática, você dará os primeiros passos na criação de um projeto RAP, desde a estruturação até a configuração inicial do serviço.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Crie um projeto simples e implemente uma funcionalidade básica.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Siga os tutoriais passo a passo e teste cada etapa do desenvolvimento.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 3.3 Behavior Definition -->
+      <section id="modulo3-3" class="module-content">
+        <div class="header">
+          <h1>3.3 Behavior Definition</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo3" class="breadcrumb-link">Módulo 3</a></li>
+            <li class="breadcrumb-item">3.3 Behavior Definition</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Definindo o Comportamento da Aplicação</h2>
+          <p class="section-paragraph">
+            Entenda como implementar regras de negócio e comportamentos na sua aplicação RAP, definindo ações e validações que garantam a integridade dos dados.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Implemente uma validação simples utilizando behavior definitions.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Testar as definições em cenários diferentes ajuda a identificar possíveis falhas.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 3.4 Validações e Ações -->
+      <section id="modulo3-4" class="module-content">
+        <div class="header">
+          <h1>3.4 Validações e Ações</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo3" class="breadcrumb-link">Módulo 3</a></li>
+            <li class="breadcrumb-item">3.4 Validações e Ações</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Implementando Regras e Ações</h2>
+          <p class="section-paragraph">
+            Saiba como criar validações robustas e implementar ações customizadas para melhorar a interação do usuário e a consistência dos dados.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Implemente uma ação que altera o estado de um registro após a validação dos dados.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Utilize mensagens claras para orientar o usuário em caso de erros.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 3.5 Determinações e Funções -->
+      <section id="modulo3-5" class="module-content">
+        <div class="header">
+          <h1>3.5 Determinações e Funções</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo3" class="breadcrumb-link">Módulo 3</a></li>
+            <li class="breadcrumb-item">3.5 Determinações e Funções</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Automatizando Processos com Funções</h2>
+          <p class="section-paragraph">
+            Explore como utilizar determinações e funções para automatizar processos, reduzindo a intervenção manual e aumentando a eficiência da aplicação.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Crie uma função que calcule automaticamente um valor com base em parâmetros de entrada.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Documente suas funções para facilitar a manutenção do código.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- MÓDULO 4: INTEGRANDO RAP COM FIORI -->
+      <section id="modulo4" class="module-content">
+        <div class="header">
+          <h1>Módulo 4: Integrando RAP com Fiori</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#inicio" class="breadcrumb-link">Home</a></li>
+            <li class="breadcrumb-item">Módulo 4</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Integração e Comunicação</h2>
+          <p class="section-paragraph">
+            Aprenda como conectar os serviços RAP com a interface SAP Fiori, garantindo uma comunicação eficaz e uma experiência de usuário aprimorada.
+          </p>
+        </div>
+      </section>
+
+      <!-- 4.1 OData e REST -->
+      <section id="modulo4-1" class="module-content">
+        <div class="header">
+          <h1>4.1 OData e REST</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo4" class="breadcrumb-link">Módulo 4</a></li>
+            <li class="breadcrumb-item">4.1 OData e REST</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Conceitos de OData e REST</h2>
+          <p class="section-paragraph">
+            Descubra como o padrão OData possibilita a criação de APIs RESTful, facilitando a comunicação entre aplicações.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Crie uma pequena API RESTful utilizando o padrão OData.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Explore exemplos práticos disponíveis na documentação oficial.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 4.2 Gerando Serviços -->
+      <section id="modulo4-2" class="module-content">
+        <div class="header">
+          <h1>4.2 Gerando Serviços</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo4" class="breadcrumb-link">Módulo 4</a></li>
+            <li class="breadcrumb-item">4.2 Gerando Serviços</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Automatizando a Criação de Serviços</h2>
+          <p class="section-paragraph">
+            Saiba como utilizar ferramentas e frameworks para gerar automaticamente os serviços necessários para a integração entre RAP e Fiori.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Experimente gerar um serviço e testá-lo em um ambiente simulado.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Verifique os logs do serviço para identificar e corrigir problemas rapidamente.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 4.3 Interface Fiori -->
+      <section id="modulo4-3" class="module-content">
+        <div class="header">
+          <h1>4.3 Interface Fiori</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo4" class="breadcrumb-link">Módulo 4</a></li>
+            <li class="breadcrumb-item">4.3 Interface Fiori</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Criando Interfaces Intuitivas</h2>
+          <p class="section-paragraph">
+            Aprenda os fundamentos para criar interfaces Fiori que sejam responsivas, intuitivas e alinhadas com os padrões de design da SAP.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Desenvolva uma tela de login ou dashboard utilizando os padrões Fiori.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Inspire-se em layouts e designs da SAP Fiori disponíveis na internet.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 4.4 Aplicações Fiori Freestyle -->
+      <section id="modulo4-4" class="module-content">
+        <div class="header">
+          <h1>4.4 Aplicações Fiori Freestyle</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo4" class="breadcrumb-link">Módulo 4</a></li>
+            <li class="breadcrumb-item">4.4 Aplicações Fiori Freestyle</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Criando Aplicações Personalizadas</h2>
+          <p class="section-paragraph">
+            Veja como criar aplicações Fiori que não seguem os templates padrão, permitindo maior flexibilidade e customização.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Crie uma aplicação freestyle com recursos interativos e uma interface diferenciada.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Teste a aplicação em diferentes dispositivos para garantir a responsividade.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- MÓDULO 5: TÓPICOS AVANÇADOS -->
+      <section id="modulo5" class="module-content">
+        <div class="header">
+          <h1>Módulo 5: Tópicos Avançados</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#inicio" class="breadcrumb-link">Home</a></li>
+            <li class="breadcrumb-item">Módulo 5</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Aprofundando o Conhecimento</h2>
+          <p class="section-paragraph">
+            Neste módulo, você explorará tópicos avançados para aprimorar o desempenho, a segurança e a integração das suas aplicações.
+          </p>
+        </div>
+      </section>
+
+      <!-- 5.1 Autorização e Segurança -->
+      <section id="modulo5-1" class="module-content">
+        <div class="header">
+          <h1>5.1 Autorização e Segurança</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo5" class="breadcrumb-link">Módulo 5</a></li>
+            <li class="breadcrumb-item">5.1 Autorização e Segurança</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Protegendo sua Aplicação</h2>
+          <p class="section-paragraph">
+            Saiba como implementar mecanismos de autorização e segurança para proteger os dados e garantir o acesso adequado aos recursos.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Implemente um controle de acesso simples em uma aplicação RAP.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Utilize padrões de segurança recomendados pela SAP.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 5.2 Draft Handling -->
+      <section id="modulo5-2" class="module-content">
+        <div class="header">
+          <h1>5.2 Draft Handling</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo5" class="breadcrumb-link">Módulo 5</a></li>
+            <li class="breadcrumb-item">5.2 Draft Handling</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Gerenciamento de Rascunhos</h2>
+          <p class="section-paragraph">
+            Aprenda a utilizar o recurso de Draft Handling para permitir salvamentos automáticos e gerenciamento de versões durante o desenvolvimento.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Configure um ambiente para testar a funcionalidade de rascunho e sua posterior confirmação.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Verifique as melhores práticas para gerenciamento de estado em aplicações SAP.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 5.3 Otimização de Performance -->
+      <section id="modulo5-3" class="module-content">
+        <div class="header">
+          <h1>5.3 Otimização de Performance</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo5" class="breadcrumb-link">Módulo 5</a></li>
+            <li class="breadcrumb-item">5.3 Otimização de Performance</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Melhorando o Desempenho</h2>
+          <p class="section-paragraph">
+            Descubra técnicas e ferramentas para otimizar o desempenho das suas aplicações, garantindo respostas mais rápidas e uma experiência de usuário superior.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Realize testes de desempenho e identifique gargalos na aplicação.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Utilize ferramentas de monitoramento para acompanhar a performance em tempo real.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 5.4 Integração com Outros Sistemas -->
+      <section id="modulo5-4" class="module-content">
+        <div class="header">
+          <h1>5.4 Integração com Outros Sistemas</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo5" class="breadcrumb-link">Módulo 5</a></li>
+            <li class="breadcrumb-item">5.4 Integração com Outros Sistemas</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Conectando Ambientes</h2>
+          <p class="section-paragraph">
+            Este tópico mostra como integrar sua aplicação RAP com outros sistemas corporativos, ampliando as funcionalidades e a interoperabilidade.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Projete um cenário de integração e simule a comunicação entre sistemas.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Verifique protocolos e padrões de integração utilizados no mercado.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- MÓDULO 6: PROJETO FINAL -->
+      <section id="modulo6" class="module-content">
+        <div class="header">
+          <h1>Módulo 6: Projeto Final</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#inicio" class="breadcrumb-link">Home</a></li>
+            <li class="breadcrumb-item">Módulo 6</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Desenvolva um Projeto Completo</h2>
+          <p class="section-paragraph">
+            Aplique todo o conhecimento adquirido em um projeto final que abrange todas as etapas do desenvolvimento com RAP e SAP Fiori.
+          </p>
+        </div>
+      </section>
+
+      <!-- 6.1 Metodologia de Projeto -->
+      <section id="modulo6-1" class="module-content">
+        <div class="header">
+          <h1>6.1 Metodologia de Projeto</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo6" class="breadcrumb-link">Módulo 6</a></li>
+            <li class="breadcrumb-item">6.1 Metodologia de Projeto</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Planejamento e Organização</h2>
+          <p class="section-paragraph">
+            Conheça as metodologias ágeis e tradicionais aplicadas no desenvolvimento de projetos SAP, aprendendo a planejar e organizar todas as etapas de forma eficaz.
+          </p>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Elabore um cronograma para o seu projeto final.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Utilize ferramentas de gestão de projetos para manter o controle das atividades.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 6.2 Desenvolvimento do Projeto -->
+      <section id="modulo6-2" class="module-content">
+        <div class="header">
+          <h1>6.2 Desenvolvimento do Projeto</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo6" class="breadcrumb-link">Módulo 6</a></li>
+            <li class="breadcrumb-item">6.2 Desenvolvimento do Projeto</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Implementação Prática</h2>
+          <p class="section-paragraph">
+            Coloque em prática todos os conceitos aprendidos desenvolvendo um projeto completo, com desde a modelagem de dados até a integração com a interface Fiori.
+          </p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          </div>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Implemente as funcionalidades principais do seu projeto.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Teste cada módulo individualmente antes de integrá-los.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 6.3 Testes e Qualidade -->
+      <section id="modulo6-3" class="module-content">
+        <div class="header">
+          <h1>6.3 Testes e Qualidade</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo6" class="breadcrumb-link">Módulo 6</a></li>
+            <li class="breadcrumb-item">6.3 Testes e Qualidade</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Garantindo a Confiabilidade</h2>
+          <p class="section-paragraph">
+            Aprenda a realizar testes funcionais e de performance para assegurar a qualidade e a estabilidade da sua aplicação.
+          </p>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Crie casos de teste para as principais funcionalidades do projeto.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Utilize ferramentas de automação de testes para facilitar o processo.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 6.4 Apresentação e Avaliação -->
+      <section id="modulo6-4" class="module-content">
+        <div class="header">
+          <h1>6.4 Apresentação e Avaliação</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#modulo6" class="breadcrumb-link">Módulo 6</a></li>
+            <li class="breadcrumb-item">6.4 Apresentação e Avaliação</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Feedback e Certificação</h2>
+          <p class="section-paragraph">
+            Finalize o seu projeto apresentando os resultados e recebendo feedback detalhado. Ao concluir, você receberá um certificado reconhecido no mercado.
+          </p>
+          <h3 class="section-subtitle">Exercícios</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Prepare uma apresentação detalhada do seu projeto final.</li>
+          </ul>
+          <h3 class="section-subtitle">Dicas</h3>
+          <ul class="section-list">
+            <li class="section-list-item">Revise todo o conteúdo do curso para fortalecer sua apresentação.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- RECURSOS: BIBLIOTECA -->
+      <section id="biblioteca" class="module-content">
+        <div class="header">
+          <h1>Biblioteca de Materiais</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#inicio" class="breadcrumb-link">Home</a></li>
+            <li class="breadcrumb-item">Biblioteca</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Materiais Complementares</h2>
+          <p class="section-paragraph">
+            Aqui você encontra livros, artigos, e links para recursos que aprofundam os tópicos abordados durante o curso.
+          </p>
+          <ul class="section-list">
+            <li class="section-list-item"><a href="#">Documentação Oficial da SAP</a></li>
+            <li class="section-list-item"><a href="#">Tutoriais e Cursos Complementares</a></li>
+            <li class="section-list-item"><a href="#">Artigos sobre RAP e Fiori</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- RECURSOS: FÓRUM DE DISCUSSÃO -->
+      <section id="forum" class="module-content">
+        <div class="header">
+          <h1>Fórum de Discussão</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#inicio" class="breadcrumb-link">Home</a></li>
+            <li class="breadcrumb-item">Fórum</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Troque Ideias e Tire Dúvidas</h2>
+          <p class="section-paragraph">
+            Participe do fórum para discutir dúvidas, compartilhar experiências e interagir com outros alunos e especialistas.
+          </p>
+          <a href="#" class="btn">Acessar Fórum</a>
+        </div>
+      </section>
+
+      <!-- RECURSOS: CERTIFICAÇÃO -->
+      <section id="certificacao" class="module-content">
+        <div class="header">
+          <h1>Certificação</h1>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#inicio" class="breadcrumb-link">Home</a></li>
+            <li class="breadcrumb-item">Certificação</li>
+          </ul>
+        </div>
+        <div class="content-section">
+          <h2 class="section-title">Receba seu Certificado</h2>
+          <p class="section-paragraph">
+            Ao finalizar o curso e o projeto final, você receberá um certificado que comprova sua especialização em RAP e SAP Fiori.
+          </p>
+          <a href="#" class="btn btn-success">Saiba Mais</a>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>&copy; 2025 Curso RAP Fiori. Todos os direitos reservados.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Toggle dos submenus
+      const toggleBtns = document.querySelectorAll('.toggle-btn');
+      toggleBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const menuItem = btn.closest('.menu-item');
+          if (menuItem.classList.contains('expanded')) {
+            menuItem.classList.remove('expanded');
+            btn.textContent = '+';
+          } else {
+            menuItem.classList.add('expanded');
+            btn.textContent = '-';
+          }
+        });
+      });
+
+      // Navegação entre seções
+      const menuLinks = document.querySelectorAll('.menu-link, .submenu-link');
+      menuLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = link.getAttribute('data-target');
+          // Remove a classe 'active' de todos os links e seções
+          document.querySelectorAll('.menu-link.active, .submenu-link.active').forEach(activeLink => {
+            activeLink.classList.remove('active');
+          });
+          document.querySelectorAll('.module-content.active').forEach(activeContent => {
+            activeContent.classList.remove('active');
+          });
+          // Adiciona a classe 'active' ao link clicado e à seção correspondente
+          link.classList.add('active');
+          const targetSection = document.getElementById(targetId);
+          if (targetSection) {
+            targetSection.classList.add('active');
+          }
+        });
       });
     });
-
-    // Lógica para navegação entre as seções do curso
-    const menuLinks = document.querySelectorAll('.menu-link');
-    menuLinks.forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const targetId = link.getAttribute('data-target');
-
-        // Remover a classe 'active' de todos os links e seções
-        document.querySelectorAll('.menu-link.active').forEach(activeLink => {
-          activeLink.classList.remove('active');
-        });
-        document.querySelectorAll('.module-content.active').forEach(activeContent => {
-          activeContent.classList.remove('active');
-        });
-
-        // Adicionar a classe 'active' ao link clicado e à seção correspondente
-        link.classList.add('active');
-        const targetSection = document.getElementById(targetId);
-        if (targetSection) {
-          targetSection.classList.add('active');
-        }
-      });
-    });
-  });
-</script>
+  </script>
+</body>
+</html>
