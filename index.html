@@ -63,6 +63,12 @@
       font-size: 1.2rem;
       color: var(--sap-gold);
     }
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
     .sidebar-menu {
       padding: 20px;
     }
@@ -72,7 +78,7 @@
       font-weight: bold;
       letter-spacing: 0.5px;
       color: var(--gray-300);
-      margin: 10px 0;
+      margin: 10px 20px;
     }
     .menu-item {
       list-style: none;
@@ -80,11 +86,12 @@
     }
     .menu-link {
       display: block;
-      padding: 10px;
+      padding: 10px 20px;
       color: var(--gray-300);
       text-decoration: none;
       border-radius: 5px;
       transition: all 0.2s ease;
+      width: 100%;
     }
     .menu-link:hover, .menu-link.active {
       background-color: rgba(255, 255, 255, 0.1);
@@ -102,7 +109,7 @@
     }
     .submenu-link {
       display: block;
-      padding: 8px 10px;
+      padding: 8px 20px;
       color: var(--gray-300);
       text-decoration: none;
       border-radius: 5px;
@@ -121,7 +128,7 @@
       border: none;
       color: var(--gray-300);
       cursor: pointer;
-      float: right;
+      font-size: 1rem;
       padding: 5px;
     }
     .main-content {
@@ -291,10 +298,10 @@
           <div class="menu-label">Módulos</div>
           
           <li class="menu-item">
-            <a href="#modulo1" class="menu-link" data-target="modulo1">
-              Módulo 1: Fundamentos do SAP Fiori
+            <div class="menu-header">
+              <a href="#modulo1" class="menu-link" data-target="modulo1">Módulo 1: Fundamentos do SAP Fiori</a>
               <button class="toggle-btn">+</button>
-            </a>
+            </div>
             <ul class="submenu">
               <li class="submenu-item">
                 <a href="#modulo1-1" class="submenu-link" data-target="modulo1-1">1.1 Introdução ao SAP Fiori</a>
@@ -309,10 +316,10 @@
           </li>
           
           <li class="menu-item">
-            <a href="#modulo2" class="menu-link" data-target="modulo2">
-              Módulo 2: Fundamentos do RAP
+            <div class="menu-header">
+              <a href="#modulo2" class="menu-link" data-target="modulo2">Módulo 2: Fundamentos do RAP</a>
               <button class="toggle-btn">+</button>
-            </a>
+            </div>
             <ul class="submenu">
               <li class="submenu-item">
                 <a href="#modulo2-1" class="submenu-link" data-target="modulo2-1">2.1 Introdução ao Modelo RAP</a>
@@ -330,10 +337,10 @@
           </li>
           
           <li class="menu-item">
-            <a href="#modulo3" class="menu-link" data-target="modulo3">
-              Módulo 3: Desenvolvimento de Aplicações
+            <div class="menu-header">
+              <a href="#modulo3" class="menu-link" data-target="modulo3">Módulo 3: Desenvolvimento de Aplicações</a>
               <button class="toggle-btn">+</button>
-            </a>
+            </div>
             <ul class="submenu">
               <li class="submenu-item">
                 <a href="#modulo3-1" class="submenu-link" data-target="modulo3-1">3.1 Configuração do Ambiente</a>
@@ -354,10 +361,10 @@
           </li>
           
           <li class="menu-item">
-            <a href="#modulo4" class="menu-link" data-target="modulo4">
-              Módulo 4: Integrando RAP com Fiori
+            <div class="menu-header">
+              <a href="#modulo4" class="menu-link" data-target="modulo4">Módulo 4: Integrando RAP com Fiori</a>
               <button class="toggle-btn">+</button>
-            </a>
+            </div>
             <ul class="submenu">
               <li class="submenu-item">
                 <a href="#modulo4-1" class="submenu-link" data-target="modulo4-1">4.1 OData e REST</a>
@@ -375,10 +382,10 @@
           </li>
           
           <li class="menu-item">
-            <a href="#modulo5" class="menu-link" data-target="modulo5">
-              Módulo 5: Tópicos Avançados
+            <div class="menu-header">
+              <a href="#modulo5" class="menu-link" data-target="modulo5">Módulo 5: Tópicos Avançados</a>
               <button class="toggle-btn">+</button>
-            </a>
+            </div>
             <ul class="submenu">
               <li class="submenu-item">
                 <a href="#modulo5-1" class="submenu-link" data-target="modulo5-1">5.1 Autorização e Segurança</a>
@@ -396,10 +403,10 @@
           </li>
           
           <li class="menu-item">
-            <a href="#modulo6" class="menu-link" data-target="modulo6">
-              Módulo 6: Projeto Final
+            <div class="menu-header">
+              <a href="#modulo6" class="menu-link" data-target="modulo6">Módulo 6: Projeto Final</a>
               <button class="toggle-btn">+</button>
-            </a>
+            </div>
             <ul class="submenu">
               <li class="submenu-item">
                 <a href="#modulo6-1" class="submenu-link" data-target="modulo6-1">6.1 Metodologia de Projeto</a>
@@ -1320,11 +1327,11 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      // Toggle dos submenus
+      // Lógica para os botões de toggle dos submenus
       const toggleBtns = document.querySelectorAll('.toggle-btn');
       toggleBtns.forEach(btn => {
         btn.addEventListener('click', function(e) {
-          e.preventDefault();
+          e.stopPropagation();
           const menuItem = btn.closest('.menu-item');
           if (menuItem.classList.contains('expanded')) {
             menuItem.classList.remove('expanded');
@@ -1336,12 +1343,13 @@
         });
       });
 
-      // Navegação entre seções
+      // Lógica para navegação entre as seções
       const menuLinks = document.querySelectorAll('.menu-link, .submenu-link');
       menuLinks.forEach(link => {
         link.addEventListener('click', function(e) {
           e.preventDefault();
           const targetId = link.getAttribute('data-target');
+
           // Remove a classe 'active' de todos os links e seções
           document.querySelectorAll('.menu-link.active, .submenu-link.active').forEach(activeLink => {
             activeLink.classList.remove('active');
@@ -1349,6 +1357,7 @@
           document.querySelectorAll('.module-content.active').forEach(activeContent => {
             activeContent.classList.remove('active');
           });
+
           // Adiciona a classe 'active' ao link clicado e à seção correspondente
           link.classList.add('active');
           const targetSection = document.getElementById(targetId);
